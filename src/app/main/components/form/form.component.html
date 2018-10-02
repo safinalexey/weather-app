@@ -1,0 +1,6 @@
+<form [formGroup]="cityFinderForm" (ngSubmit)="onSubmit()">
+	<mat-form-field>
+		<input matInput placeholder="City" formControlName="city">
+	</mat-form-field>
+	<button type="submit" mat-flat-button color="primary">Find</button>
+</form>

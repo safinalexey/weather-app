@@ -1,0 +1,33 @@
+<div class="container">
+	<div class="item"></div>
+	<div class="item"></div>
+	<div class="item"></div>
+	<div class="item"></div>
+	<div class="item form">
+		<div *ngIf="!error">
+			<div class="spinner-container" *ngIf="loading">
+				<mat-spinner class="spinner"></mat-spinner>
+				<p>Let me see...</p>
+			</div>
+			<div *ngIf="!loading">
+				<p>Weather in {{city}} : {{weather | units: unit : isFirstChange}}
+					<button mat-button color="primary" (click)="switchUnits()">{{unit}}</button></p>
+				<p>Forecast:</p>
+				<div class="row">
+					<div *ngFor="let day of getForecast()" class="row-item">
+						<p>{{day.date | date}}</p>
+						<p>{{day.temp | units : unit : isFirstChange}} {{unit}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div *ngIf="error">
+			<p>Oops...we couldn't find your city, try again?</p>
+		</div>
+		<weather-app-form (submitted)="findCity($event)"></weather-app-form>
+	</div>
+	<div class="item"></div>
+	<div class="item"></div>
+	<div class="item"></div>
+	<div class="item"></div>
+</div>
