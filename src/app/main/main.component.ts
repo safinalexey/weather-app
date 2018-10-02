@@ -60,21 +60,15 @@ export class MainComponent implements OnInit {
 
 		const today = forecast.filter(item => item.dt_txt.split(' ')[0] === this.today);
 
-		if (!today.length) {
+		const numberOfNextDays = !today.length ? 5 : 4;
+		const nextDates = this.getNextDates(numberOfNextDays);
+		const weatherByDays = this.getWeatherByDays(nextDates, forecast);
+		const temperatureAverages = this.getTemperatureAverages(weatherByDays);
+		this.forecast = nextDates.map((date, i) => {
+			return {date: date, temp: temperatureAverages[i]};
+		});
 
-			const nextDates = this.getNextDates(5);
-			const weatherByDays = this.getWeatherByDays(nextDates, forecast);
-			const temperatureAverages = this.getTemperatureAverages(weatherByDays);
-			this.forecast = nextDates.map((date, i) => {
-				return {date: date, temp: temperatureAverages[i]};
-			});
-		} else {
-			const nextDates = this.getNextDates(4);
-			const weatherByDays = this.getWeatherByDays(nextDates, forecast);
-			const temperatureAverages = this.getTemperatureAverages(weatherByDays);
-			this.forecast = nextDates.map((date, i) => {
-				return {date: date, temp: temperatureAverages[i]};
-			});
+		if (today.length) {
 			this.showWeather(weather);
 		}
 	}
@@ -90,6 +84,7 @@ export class MainComponent implements OnInit {
 
 	findCity(city) {
 		this.loading = true;
+		this.city = city;
 		this.weatherService.getWeatherByCity(city)
 			.pipe(
 				catchError(this.handleError('city search'))
@@ -97,6 +92,7 @@ export class MainComponent implements OnInit {
 			.subscribe(this.handleResponse.bind(this));
 	}
 
+	// probably should be in service
 	private handleError<T>(operation = 'operation', result?: T) {
 		return (error: any): Observable<T> => {
 
